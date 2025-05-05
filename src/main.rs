@@ -1,8 +1,14 @@
+
 use std::env;
 
 use serenity::async_trait;
 use serenity::model::channel::Message;
 use serenity::prelude::*;
+
+
+fn get_weather() -> String {
+    return "69* celcjusza".to_string();
+}
 
 struct Handler;
 
@@ -14,12 +20,25 @@ impl EventHandler for Handler {
             return;
         }
         println!("author : {}, content: {}, tts: {}", msg.author.display_name().to_string(), msg.content, msg.tts);
-
-        if msg.content == "!ping" {
-            if let Err(why) = msg.channel_id.say(&ctx.http, "Pong!").await {
-                println!("Error sending message: {why:?}");
+        match msg.content.as_str(){
+            "!ping" => {
+                if let Err(why) = msg.channel_id.say(&ctx.http, "Pong!").await {
+                    println!("Error sending message: {why:?}");
+                }
+            }
+            "!weather" => {
+                let weather = get_weather();
+                if let Err(why) = msg.channel_id.say(&ctx.http, format!("weather is {}", weather)).await {
+                    println!("Error sending message: {why:?}");
+                }
+            }
+            _ => {
+                if let Err(why) = msg.channel_id.say(&ctx.http, "unkown command").await {
+                    println!("Error sending message: {why:?}");
+                }
             }
         }
+
     }
 }
 
